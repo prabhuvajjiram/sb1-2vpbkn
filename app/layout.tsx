@@ -1,12 +1,9 @@
-'use client';
-
 import React from 'react'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { ThemeProvider } from '../components/theme-provider'
-import { motion } from 'framer-motion'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,15 +22,9 @@ export default function RootLayout({
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
-          <motion.main 
-            className="flex-grow"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-          >
+          <main className="flex-grow">
             {children}
-          </motion.main>
+          </main>
           <Footer />
         </ThemeProvider>
       </body>
