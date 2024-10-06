@@ -1,34 +1,11 @@
-// app/layout.tsx
-import React from 'react'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import ThemeProviderWrapper from './ThemeProviderWrapper'
+'use client'
 
-const inter = Inter({ subsets: ['latin'] })
+import { ThemeProvider } from '../components/theme-provider'
 
-export const metadata = {
-  title: 'Rajambal Cottons',
-  description: 'High-quality cotton sarees',
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function ThemeProviderWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <ThemeProviderWrapper>
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </ThemeProviderWrapper>
-      </body>
-    </html>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      {children}
+    </ThemeProvider>
   )
 }
