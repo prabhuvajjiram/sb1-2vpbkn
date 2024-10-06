@@ -14,43 +14,34 @@ const products = [
   { id: 9, name: 'Casual Cotton Saree', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&h=200&q=80' },
 ];
 
+// In FeaturedProducts.tsx
+
 export default function FeaturedProducts() {
+  console.log('FeaturedProducts component rendered');
   return (
-    <section className="py-8 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-gray-200"
-        >
+    <section className="py-16 bg-black w-full">
+      <div className="container mx-auto px-4 w-full">
+        <h2 className="text-3xl font-bold text-center mb-10 text-white">
           Featured Products
-        </motion.h2>
-        <div className="grid grid-cols-3 gap-4">
-          {products.map((product, index) => (
-            <motion.div
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-full">
+          {products.map((product) => (
+            <div
               key={product.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden"
+              className="bg-gray-800 rounded-lg overflow-hidden shadow-lg w-full"
             >
               <img 
                 src={product.image} 
                 alt={product.name} 
-                className="w-full h-40 object-cover object-center"
+                className="w-full h-48 object-cover object-center"
               />
-              <div className="p-2 text-center">
-                <h3 className="text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200 truncate">{product.name}</h3>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-purple-500 text-white text-xs px-3 py-1 rounded-full hover:bg-purple-600 transition duration-300"
-                >
-                  View
-                </motion.button>
+              <div className="p-4">
+                <h3 className="text-sm font-semibold mb-2 text-white truncate">{product.name}</h3>
+                <button className="w-full bg-purple-600 text-white py-2 px-4 rounded-full hover:bg-purple-700 transition duration-300 text-sm">
+                  View Details
+                </button>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
