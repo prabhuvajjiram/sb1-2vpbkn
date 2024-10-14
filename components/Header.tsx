@@ -1,100 +1,113 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
-import { Sun, Moon, Menu, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, Moon, ShoppingBag, Sun } from 'lucide-react';
 
-export default function Header() {
-  const { theme, setTheme } = useTheme();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+import { Button } from "../components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
 
-  useEffect(() => setMounted(true), []);
+const NAV_ITEMS = [
+  { href: '/about', label: 'About' },
+  { href: '/products', label: 'Products' },
+  { href: '/process', label: 'Our Process' },
+];
 
-  const menuItems = [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
-    { href: '/products', label: 'Products' },
-    { href: '/process', label: 'Our Process' },
-  ];
+const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+  <Link href={href} className="transition-colors hover:text-foreground/80 text-foreground/60">
+    {children}
+  </Link>
+);
 
-  return (
-    <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm fixed w-full z-50 transition-colors duration-300">
-      <div className="container mx-auto px-4">
-        <nav className="flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-purple-600 dark:text-purple-400 transition-colors duration-200">
-            Rajambal Cottons
-          </Link>
-          <div className="hidden md:flex items-center space-x-6">
-            {menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-purple-800 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-200"
-              >
-                {item.label}
-              </Link>
-            ))}
-            {mounted && (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="ml-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-purple-200 dark:hover:bg-purple-700 transition-colors duration-200"
-                aria-label="Toggle theme"
-              >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-              </motion.button>
-            )}
-          </div>
-          <div className="md:hidden">
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-purple-800 transition-colors duration-200"
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+const Navigation = () => (
+  <nav className="flex items-center space-x-6 text-sm font-medium">
+    {NAV_ITEMS.map(item => (
+      <NavLink key={item.href} href={item.href}>{item.label}</NavLink>
+    ))}
+  </nav>
+);
+
+const ThemeToggle = () => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="ghost" size="icon">
+        <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+        <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <span className="sr-only">Toggle theme
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem>Light</DropdownMenuItem>
+      <DropdownMenuItem>Dark</DropdownMenuItem>
+      <DropdownMenuItem>System</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
+
+const Header = React.memo(() => (
+  <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="container flex h-14 items-center">
+      <div className="mr-4 hidden md:flex">
+        <Link href="/" className="mr-6 flex items-center space-x-2">
+          <span className="hidden font-bold sm:inline-block">Rajambal Cottons
+        </Link>
+        <Navigation />
+      </div>
+      <Button variant="outline" size="icon" className="mr-2 md:hidden">
+        <Menu className="h-5 w-5" />
+        <span className="sr-only">Toggle Menu
+      </Button>
+      <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+        <nav className="flex items-center">
+          <Button variant="ghost" size="icon">
+            <ShoppingBag className="h-5 w-5" />
+            <span className="sr-only">Shopping cart
+          </Button>
+          <ThemeToggle />
         </nav>
       </div>
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden bg-white dark:bg-gray-800 shadow-lg"
-          >
-            <div className="container mx-auto px-4 py-2">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="block py-2 px-4 text-sm text-gray-700 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-purple-800 hover:text-purple-600 dark:hover:text-purple-400 rounded-md transition-colors duration-200"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              {mounted && (
-                <button
-                  onClick={() => {
-                    setTheme(theme === 'dark' ? 'light' : 'dark');
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full text-left py-2 px-4 text-sm text-gray-700 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-purple-800 hover:text-purple-600 dark:hover:text-purple-400 rounded-md transition-colors duration-200"
-                >
-                  {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                </button>
-              )}
+    </div>
+  </header>
+));
+
+const Home: React.FC = () => (
+  <div className="min-h-screen bg-background text-foreground">
+    <Header />
+    <main className="flex-1">
+      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+        <div className="container px-4 md:px-6">
+          <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+            <Image
+              alt="Elegant woman in a purple and gold saree"
+              className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last lg:aspect-square"
+              height={600}
+              src="/placeholder.svg"
+              width={600}
+            />
+            <div className="flex flex-col justify-center space-y-4">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                  Welcome to Rajambal Cottons
+                </h1>
+                <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
+                  Discover the Elegance of Pure Cotton Sarees
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <Button className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300">
+                  Explore Collection
+                </Button>
+              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
-}
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+);
+
+export default Home;
